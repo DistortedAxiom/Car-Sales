@@ -1,3 +1,6 @@
+import {ADD_FEATURE, REMOVE_FEATURE} from '../actions/action'
+import { act } from 'react-dom/test-utils';
+
 export let initialState = {
     additionalPrice: 0,
     car: {
@@ -17,6 +20,30 @@ export let initialState = {
 
 export const reducer = (state = initialState, action) => {
     switch(action.type) {
+        case ADD_FEATURE:
+            return {
+            ...state,
+            additionalPrice: state.additionalPrice + action.payload.price,
+            additionalFeatures: state.additionalFeatures.filter(item => {
+                return item.id !== action.payload.id
+            }),
+            car: {
+                ...state.car,
+                features: [...state.car.features, action.payload]
+            }
+        }
+        case REMOVE_FEATURE:
+            return {
+                ...state,
+                additionalPrice: state.additionalPrice - action.payload.price,
+                additionalFeatures: [...state.additionalFeatures, action.payload],
+                car: {
+                    ...state.car,
+                    features: state.car.features.filter((item) => {
+                        return item.id !== action.payload.id
+                    })
+                }
+            }
         default:
             return state;
     }
